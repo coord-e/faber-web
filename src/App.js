@@ -3,12 +3,15 @@ import MonacoEditor from 'react-monaco-editor';
 
 import 'react-bulma-components/dist/react-bulma-components.min.css';
 import { Button, Columns, Dropdown, Heading, Content, Container, Loader } from 'react-bulma-components';
+import MobileDetect from 'mobile-detect';
 
 import './App.css';
 
 const ENDPOINT_BASE = "https://api.faber.coord-e.com/";
 
 const endpoint = (name) => ENDPOINT_BASE + name;
+
+const md = new MobileDetect(window.navigator.userAgent);
 
 class App extends React.Component {
   constructor(props) {
@@ -108,7 +111,9 @@ class App extends React.Component {
 
   render() {
     return (
-      <Columns>
+      md.mobile()
+      ? "mobile browser is not supported; please visit from desktop"
+      : <Columns>
         <Columns.Column>
             <MonacoEditor
                 width="100%"
