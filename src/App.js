@@ -2,7 +2,7 @@ import React from 'react';
 import MonacoEditor from 'react-monaco-editor';
 
 import 'react-bulma-components/dist/react-bulma-components.min.css';
-import { Button, Columns } from 'react-bulma-components';
+import { Button, Columns, Dropdown } from 'react-bulma-components';
 
 // const ENDPOINT_BASE = "https://api.faber.coord-e.com/";
 const ENDPOINT_BASE = "http://localhost:8080/";
@@ -14,9 +14,15 @@ class App extends React.Component {
     super(props);
     this.state = {
       code: '// type your code...',
+      tags: [],
+      tag: '',
       stdout: '',
       stderr: '',
     };
+
+    fetch(endpoint("tags"))
+      .then(resp => resp.json())
+      .then(data => this.setState({tags: data, tag: data[0]}));
   }
 
   editorDidMount = (editor, monaco) => {
@@ -29,7 +35,7 @@ class App extends React.Component {
 
     const data = {
       code: value,
-      tag: "edge",
+      tag: this.state.tag,
       save: false,
     };
 
@@ -51,6 +57,8 @@ class App extends React.Component {
     })
   }
 
+  onChangeTag = (name) => this.setState({tag: name})
+
   render() {
     return (
       <Columns>
@@ -68,6 +76,9 @@ class App extends React.Component {
         <Columns.Column>
             <div id="toolbox">
                 <Button onClick={this.onRun}>Run</Button>
+                <Dropdown onChange={this.onChangeTag}>
+                    {this.state.tags.map(e => <Dropdown.Item key={e} value={e}>{e}</Dropdown.Item>)}
+                </Dropdown>
             </div>
             <div id="stdout">{this.state.stdout}</div>
             <div id="stderr">{this.state.stderr}</div>
