@@ -2,7 +2,7 @@ import React from 'react';
 import MonacoEditor from 'react-monaco-editor';
 
 import 'react-bulma-components/dist/react-bulma-components.min.css';
-import { Button, Columns, Dropdown, Heading, Content } from 'react-bulma-components';
+import { Button, Columns, Dropdown, Heading, Content, Container, Loader } from 'react-bulma-components';
 
 const ENDPOINT_BASE = "https://api.faber.coord-e.com/";
 
@@ -21,6 +21,7 @@ class App extends React.Component {
       example: '',
       stdout: '// press "Run" to compile',
       stderr: '',
+      isCompiling: false,
     };
 
     fetch(endpoint("tags"))
@@ -61,7 +62,9 @@ class App extends React.Component {
     };
 
     this.setState({
-      status: "compiling",
+      stdout: "compiling...",
+      stderr: "compiling...",
+      isCompiling: true,
     });
 
     const resp = await fetch(
@@ -79,7 +82,7 @@ class App extends React.Component {
     this.setState({
       stdout: content.stdout,
       stderr: content.stderr,
-      status: "compiled",
+      isCompiling: false,
     });
 
     if(save) {
@@ -118,24 +121,24 @@ class App extends React.Component {
         />
         </Columns.Column>
         <Columns.Column>
-            <div id="toolbox">
-                <div>
+            <Container id="toolbox">
+                <Container>
                     <Dropdown onChange={this.onChangeTag} value={this.state.tag}>
                         {this.state.tags.map(e => <Dropdown.Item key={e} value={e}>{e}</Dropdown.Item>)}
                     </Dropdown>
-                    <Button onClick={this.onRun(false)}>Run</Button>
-                    <Button onClick={this.onRun(true)}>Share</Button>
-                </div>
-                <div>
+                    <Button onClick={this.onRun(false)} disabled={this.state.isCompiling}>Run</Button>
+                    <Button onClick={this.onRun(true)} disabled={this.state.isCompiling}>Share</Button>
+                </Container>
+                <Container>
                     <Dropdown onChange={this.onChangeExample} value={this.state.example}>
                         {this.state.examples.map(e => <Dropdown.Item key={e.name} value={e.url}>{e.name}</Dropdown.Item>)}
                     </Dropdown>
                     <Button onClick={this.onLoadExample}>Load an example</Button>
-                </div>
-                <div>
-                    {this.state.status}
-                </div>
-            </div>
+                </Container>
+                <Container>
+                    {this.state.isCompiling && <Loader />}
+                </Container>
+            </Container>
             <Content>
                 <Heading subtitle>stdout</Heading>
                 <pre id="stdout">{this.state.stdout}</pre>
