@@ -13,7 +13,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      code: '// type your code...',
+      code: "// loading an example...\nname main = 0\n",
       tags: [],
       tag: '',
       examples: [],
@@ -28,7 +28,8 @@ class App extends React.Component {
 
     fetch(endpoint("examples"))
       .then(resp => resp.json())
-      .then(data => this.setState({examples: data, example: data[0]}))
+      .then(data => this.setState({examples: data, example: data[0].url}))
+      .then(this.onLoadExample)
   }
 
   editorDidMount = (editor, monaco) => {
