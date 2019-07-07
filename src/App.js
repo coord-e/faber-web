@@ -16,6 +16,8 @@ class App extends React.Component {
       code: '// type your code...',
       tags: [],
       tag: '',
+      examples: [],
+      example: '',
       stdout: '',
       stderr: '',
     };
@@ -23,6 +25,10 @@ class App extends React.Component {
     fetch(endpoint("tags"))
       .then(resp => resp.json())
       .then(data => this.setState({tags: data, tag: data[0]}));
+
+    fetch(endpoint("examples"))
+      .then(resp => resp.json())
+      .then(data => this.setState({examples: data}))
   }
 
   editorDidMount = (editor, monaco) => {
@@ -57,7 +63,17 @@ class App extends React.Component {
     })
   }
 
+  onLoadExample = async () => {
+    const resp = await fetch(this.state.example)
+    const data = await resp.text()
+
+    this.setState({
+        code: data
+    })
+  }
+
   onChangeTag = (name) => this.setState({tag: name})
+  onChangeExample = (url) => this.setState({example: url})
 
   render() {
     return (
@@ -79,6 +95,10 @@ class App extends React.Component {
                 <Dropdown onChange={this.onChangeTag}>
                     {this.state.tags.map(e => <Dropdown.Item key={e} value={e}>{e}</Dropdown.Item>)}
                 </Dropdown>
+                <Dropdown onChange={this.onChangeExample}>
+                    {this.state.examples.map(e => <Dropdown.Item key={e.name} value={e.url}>{e.name}</Dropdown.Item>)}
+                </Dropdown>
+                <Button onClick={this.onLoadExample}>Load an example</Button>
             </div>
             <div id="stdout">{this.state.stdout}</div>
             <div id="stderr">{this.state.stderr}</div>
