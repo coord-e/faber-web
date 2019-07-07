@@ -4,6 +4,11 @@ import MonacoEditor from 'react-monaco-editor';
 import 'react-bulma-components/dist/react-bulma-components.min.css';
 import { Button, Columns } from 'react-bulma-components';
 
+// const ENDPOINT_BASE = "https://api.faber.coord-e.com/";
+const ENDPOINT_BASE = "http://localhost:8080/";
+
+const endpoint = (name) => ENDPOINT_BASE + name;
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -11,38 +16,58 @@ class App extends React.Component {
       code: '// type your code...',
       stdout: '',
       stderr: '',
-    }
-    this.onChange = this.onChange.bind(this)
-    this.editorDidMount = this.editorDidMount.bind(this)
+    };
   }
-  editorDidMount(editor, monaco) {
+
+  editorDidMount = (editor, monaco) => {
     editor.focus();
   }
-  onChange(newValue, e) {
-    console.log('onChange', newValue, e);
-  }
-  render() {
-    const code = this.state.code;
-    const options = {
-      selectOnLineNumbers: true
+
+  onRun = async () => {
+    const model = this.refs.monaco.editor.getModel();
+    const value = model.getValue();
+
+    const data = {
+      code: value,
+      tag: "edge",
+      save: false,
     };
+
+    const resp = await fetch(
+      endpoint("compile"), {
+        method: "POST",
+        mode: "cors",
+        headers: {
+            "Content-Type": "application/json; charset=utf-8",
+        },
+        redirect: "follow",
+        body: JSON.stringify(data),
+    });
+    const content = await resp.json();
+
+    this.setState({
+      stdout: content.stdout,
+      stderr: content.stderr,
+    })
+  }
+
+  render() {
     return (
       <Columns>
         <Columns.Column>
         <MonacoEditor
             width="100%"
             height="100vh"
-            language="javascript"
             theme="vs-dark"
-            value={code}
-            options={options}
-            onChange={this.onChange}
+            value={this.state.code}
+            options={{}}
             editorDidMount={this.editorDidMount}
+            ref="monaco"
         />
         </Columns.Column>
         <Columns.Column>
             <div id="toolbox">
-                <Button>Run</Button>
+                <Button onClick={this.onRun}>Run</Button>
             </div>
             <div id="stdout">{this.state.stdout}</div>
             <div id="stderr">{this.state.stderr}</div>
