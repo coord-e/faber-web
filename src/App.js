@@ -116,7 +116,7 @@ class App extends React.Component {
       : <Columns>
         <Columns.Column>
             <MonacoEditor
-                width="100%"
+                width="98%"
                 height="100vh"
                 theme="vs-dark"
                 language="none"
