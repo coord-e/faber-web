@@ -28,7 +28,7 @@ class App extends React.Component {
 
     fetch(endpoint("examples"))
       .then(resp => resp.json())
-      .then(data => this.setState({examples: data}))
+      .then(data => this.setState({examples: data, example: data[0]}))
   }
 
   editorDidMount = (editor, monaco) => {
@@ -92,10 +92,10 @@ class App extends React.Component {
         <Columns.Column>
             <div id="toolbox">
                 <Button onClick={this.onRun}>Run</Button>
-                <Dropdown onChange={this.onChangeTag}>
+                <Dropdown onChange={this.onChangeTag} value={this.state.tag}>
                     {this.state.tags.map(e => <Dropdown.Item key={e} value={e}>{e}</Dropdown.Item>)}
                 </Dropdown>
-                <Dropdown onChange={this.onChangeExample}>
+                <Dropdown onChange={this.onChangeExample} value={this.state.example}>
                     {this.state.examples.map(e => <Dropdown.Item key={e.name} value={e.url}>{e.name}</Dropdown.Item>)}
                 </Dropdown>
                 <Button onClick={this.onLoadExample}>Load an example</Button>
