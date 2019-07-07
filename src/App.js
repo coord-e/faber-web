@@ -11,6 +11,8 @@ const endpoint = (name) => ENDPOINT_BASE + name;
 class App extends React.Component {
   constructor(props) {
     super(props);
+    const id = window.location.pathname.substr(1);
+
     this.state = {
       code: "// loading an example...\nname main = 0\n",
       tags: [],
@@ -28,21 +30,33 @@ class App extends React.Component {
     fetch(endpoint("examples"))
       .then(resp => resp.json())
       .then(data => this.setState({examples: data, example: data[0].url}))
-      .then(this.onLoadExample)
+      .then(id ? null : this.onLoadExample)
+
+    if(id) {
+      this.state.code = "// loading an saved code"
+      fetch(endpoint("restore/"+id))
+        .then(resp => resp.json())
+        .then(data => this.setState({
+          code: data.options.code,
+          tag: data.options.tag,
+          stdout: data.result.stdout,
+          stderr: data.result.stderr,
+        }))
+    }
   }
 
   editorDidMount = (editor, monaco) => {
     editor.focus();
   }
 
-  onRun = async () => {
+  onRun = save => async () => {
     const model = this.refs.monaco.editor.getModel();
     const value = model.getValue();
 
     const data = {
       code: value,
       tag: this.state.tag,
-      save: false,
+      save,
     };
 
     const resp = await fetch(
@@ -60,7 +74,12 @@ class App extends React.Component {
     this.setState({
       stdout: content.stdout,
       stderr: content.stderr,
-    })
+    });
+
+    if(save) {
+      const url = window.location.protocol + "//" + window.location.host + "/" + content.id
+      window.location.assign(url)
+    }
   }
 
   onLoadExample = async () => {
@@ -93,7 +112,8 @@ class App extends React.Component {
         </Columns.Column>
         <Columns.Column>
             <div id="toolbox">
-                <Button onClick={this.onRun}>Run</Button>
+                <Button onClick={this.onRun(false)}>Run</Button>
+                <Button onClick={this.onRun(true)}>Share</Button>
                 <Dropdown onChange={this.onChangeTag} value={this.state.tag}>
                     {this.state.tags.map(e => <Dropdown.Item key={e} value={e}>{e}</Dropdown.Item>)}
                 </Dropdown>
