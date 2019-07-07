@@ -2,7 +2,7 @@ import React from 'react';
 import MonacoEditor from 'react-monaco-editor';
 
 import 'react-bulma-components/dist/react-bulma-components.min.css';
-import { Button, Columns, Dropdown } from 'react-bulma-components';
+import { Button, Columns, Dropdown, Heading, Content } from 'react-bulma-components';
 
 const ENDPOINT_BASE = "https://api.faber.coord-e.com/";
 
@@ -136,8 +136,14 @@ class App extends React.Component {
                     {this.state.status}
                 </div>
             </div>
-            <pre id="stdout">{this.state.stdout}</pre>
-            <pre id="stderr">{this.state.stderr}</pre>
+            <Content>
+                <Heading subtitle>stdout</Heading>
+                <pre id="stdout">{this.state.stdout}</pre>
+            </Content>
+            <Content>
+                <Heading subtitle>stderr</Heading>
+                <pre id="stderr">{this.state.stderr}</pre>
+            </Content>
         </Columns.Column>
     </Columns>
     );
