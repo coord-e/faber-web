@@ -18,7 +18,7 @@ class App extends React.Component {
       tag: '',
       examples: [],
       example: '',
-      stdout: '',
+      stdout: '// press "Run" to compile',
       stderr: '',
     };
 
@@ -103,8 +103,8 @@ class App extends React.Component {
                 </Dropdown>
                 <Button onClick={this.onLoadExample}>Load an example</Button>
             </div>
-            <div id="stdout">{this.state.stdout}</div>
-            <div id="stderr">{this.state.stderr}</div>
+            <pre id="stdout">{this.state.stdout}</pre>
+            <pre id="stderr">{this.state.stderr}</pre>
         </Columns.Column>
     </Columns>
     );
