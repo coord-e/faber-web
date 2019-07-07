@@ -73,8 +73,9 @@ class App extends React.Component {
     })
   }
 
-  onChangeTag = (name) => this.setState({tag: name})
-  onChangeExample = (url) => this.setState({example: url})
+  onChangeCode = (code, e) => this.setState({code})
+  onChangeTag = (tag) => this.setState({tag})
+  onChangeExample = (example) => this.setState({example})
 
   render() {
     return (
@@ -87,6 +88,7 @@ class App extends React.Component {
             value={this.state.code}
             options={{}}
             editorDidMount={this.editorDidMount}
+            onChange={this.onChangeCode}
             ref="monaco"
         />
         </Columns.Column>
