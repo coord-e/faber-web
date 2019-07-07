@@ -4,6 +4,8 @@ import MonacoEditor from 'react-monaco-editor';
 import 'react-bulma-components/dist/react-bulma-components.min.css';
 import { Button, Columns, Dropdown, Heading, Content, Container, Loader } from 'react-bulma-components';
 
+import './App.css';
+
 const ENDPOINT_BASE = "https://api.faber.coord-e.com/";
 
 const endpoint = (name) => ENDPOINT_BASE + name;

@@ -1,15 +1,3 @@
 body {
   margin: 0;
 }
-
-#toolbox {
-  height: 10vh;
-}
-
-#stdout {
-  height: 45vh;
-}
-
-#stderr {
-  height: 45vh;
-}
