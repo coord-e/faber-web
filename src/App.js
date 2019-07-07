@@ -53,11 +53,16 @@ class App extends React.Component {
     const model = this.refs.monaco.editor.getModel();
     const value = model.getValue();
 
+
     const data = {
       code: value,
       tag: this.state.tag,
       save,
     };
+
+    this.setState({
+      status: "compiling",
+    });
 
     const resp = await fetch(
       endpoint("compile"), {
@@ -74,6 +79,7 @@ class App extends React.Component {
     this.setState({
       stdout: content.stdout,
       stderr: content.stderr,
+      status: "compiled",
     });
 
     if(save) {
@@ -113,15 +119,22 @@ class App extends React.Component {
         </Columns.Column>
         <Columns.Column>
             <div id="toolbox">
-                <Button onClick={this.onRun(false)}>Run</Button>
-                <Button onClick={this.onRun(true)}>Share</Button>
-                <Dropdown onChange={this.onChangeTag} value={this.state.tag}>
-                    {this.state.tags.map(e => <Dropdown.Item key={e} value={e}>{e}</Dropdown.Item>)}
-                </Dropdown>
-                <Dropdown onChange={this.onChangeExample} value={this.state.example}>
-                    {this.state.examples.map(e => <Dropdown.Item key={e.name} value={e.url}>{e.name}</Dropdown.Item>)}
-                </Dropdown>
-                <Button onClick={this.onLoadExample}>Load an example</Button>
+                <div>
+                    <Dropdown onChange={this.onChangeTag} value={this.state.tag}>
+                        {this.state.tags.map(e => <Dropdown.Item key={e} value={e}>{e}</Dropdown.Item>)}
+                    </Dropdown>
+                    <Button onClick={this.onRun(false)}>Run</Button>
+                    <Button onClick={this.onRun(true)}>Share</Button>
+                </div>
+                <div>
+                    <Dropdown onChange={this.onChangeExample} value={this.state.example}>
+                        {this.state.examples.map(e => <Dropdown.Item key={e.name} value={e.url}>{e.name}</Dropdown.Item>)}
+                    </Dropdown>
+                    <Button onClick={this.onLoadExample}>Load an example</Button>
+                </div>
+                <div>
+                    {this.state.status}
+                </div>
             </div>
             <pre id="stdout">{this.state.stdout}</pre>
             <pre id="stderr">{this.state.stderr}</pre>
