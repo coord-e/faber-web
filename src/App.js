@@ -110,19 +110,19 @@ class App extends React.Component {
     return (
       <Columns>
         <Columns.Column>
-        <MonacoEditor
-            width="100%"
-            height="100vh"
-            theme="vs-dark"
-            language="none"
-            value={this.state.code}
-            options={{}}
-            editorDidMount={this.editorDidMount}
-            onChange={this.onChangeCode}
-            ref="monaco"
-        />
+            <MonacoEditor
+                width="100%"
+                height="100vh"
+                theme="vs-dark"
+                language="none"
+                value={this.state.code}
+                options={{}}
+                editorDidMount={this.editorDidMount}
+                onChange={this.onChangeCode}
+                ref="monaco"
+            />
         </Columns.Column>
-        <Columns.Column>
+        <Columns.Column size="one-third">
             <Container id="toolbox">
                 <Container>
                     <Dropdown onChange={this.onChangeTag} value={this.state.tag}>
@@ -141,13 +141,13 @@ class App extends React.Component {
                     {this.state.isCompiling && <Loader />}
                 </Container>
             </Container>
-            <Content>
+            <Content className="output">
                 <Heading subtitle>stdout</Heading>
-                <pre id="stdout">{this.state.stdout}</pre>
+                <pre className="output-box">{this.state.stdout}</pre>
             </Content>
-            <Content>
+            <Content className="output">
                 <Heading subtitle>stderr</Heading>
-                <pre id="stderr">{this.state.stderr}</pre>
+                <pre className="output-box">{this.state.stderr}</pre>
             </Content>
         </Columns.Column>
     </Columns>

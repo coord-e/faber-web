@@ -1,12 +1,11 @@
-
 #toolbox {
   height: 10vh;
 }
 
-#stdout {
+.output {
   height: 45vh;
 }
 
-#stderr {
-  height: 45vh;
+.output-box {
+  height: 70%;
 }
