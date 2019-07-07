@@ -103,6 +103,7 @@ class App extends React.Component {
             width="100%"
             height="100vh"
             theme="vs-dark"
+            language="none"
             value={this.state.code}
             options={{}}
             editorDidMount={this.editorDidMount}
