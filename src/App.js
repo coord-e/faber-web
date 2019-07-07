@@ -78,7 +78,7 @@ class App extends React.Component {
 
     if(save) {
       const url = window.location.protocol + "//" + window.location.host + "/" + content.id
-      window.location.assign(url)
+      window.history.pushState('', '', url)
     }
   }
 
