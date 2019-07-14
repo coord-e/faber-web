@@ -1,17 +1,24 @@
 import React from 'react';
+import styled from 'styled-components';
 import { Heading, Content, Container } from 'react-bulma-components';
 
-import './OutputView.css';
+const OutputContent = styled(Content)`
+  height: 45vh;
+`;
+
+const OutputBox = styled.pre`
+  height: 70%;
+`;
 
 export const OutputView = ({stdout, stderr}) => (
   <Container>
-    <Content className="output">
+    <OutputContent>
       <Heading subtitle>stdout</Heading>
-      <pre className="output-box">{stdout}</pre>
-    </Content>
-    <Content className="output">
+      <OutputBox>{stdout}</OutputBox>
+    </OutputContent>
+    <OutputContent>
       <Heading subtitle>stderr</Heading>
-      <pre className="output-box">{stderr}</pre>
-    </Content>
+      <OutputBox>{stderr}</OutputBox>
+    </OutputContent>
   </Container>
 )
