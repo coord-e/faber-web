@@ -67,7 +67,7 @@ export const App = () => {
   return (
       <Columns>
         <Columns.Column>
-            <Editor code={code} onChange={setCode} />
+            <Editor code={code} onChange={(code, _) => setCode(code)} />
         </Columns.Column>
         <Columns.Column size="one-third">
             <Toolbox onLoadExample={setCode} onRun={onRun} />
