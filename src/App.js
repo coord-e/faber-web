@@ -18,7 +18,6 @@ class App extends React.Component {
       code: "// loading an example...\nname main = 0\n",
       stdout: '// press "Run" to compile',
       stderr: '',
-      isCompiling: false,
     };
 
     if(id) {
@@ -34,7 +33,7 @@ class App extends React.Component {
     }
   }
 
-  onRun = (tag, save) => async () => {
+  onRun = async (tag, save) => {
     const data = {
       code: this.state.code,
       tag: tag,
@@ -44,7 +43,6 @@ class App extends React.Component {
     this.setState({
       stdout: "compiling...",
       stderr: "compiling...",
-      isCompiling: true,
     });
 
     const resp = await fetch(
@@ -62,7 +60,6 @@ class App extends React.Component {
     this.setState({
       stdout: content.stdout,
       stderr: content.stderr,
-      isCompiling: false,
     });
 
     if(save) {
@@ -80,7 +77,7 @@ class App extends React.Component {
             <Editor code={this.state.code} onChange={this.onChangeCode} />
         </Columns.Column>
         <Columns.Column size="one-third">
-            <Toolbox onLoadExample={this.onChangeCode} isCompiling={this.state.isCompiling} onRun={this.onRun} />
+            <Toolbox onLoadExample={this.onChangeCode} onRun={this.onRun} />
             <OutputView stdout={this.state.stdout} stderr={this.state.stderr} />
         </Columns.Column>
     </Columns>

@@ -13,12 +13,14 @@ async function fetchExample(example) {
   return await resp.text();
 }
 
-export const Toolbox = ({onLoadExample, isCompiling, onRun}) => {
+export const Toolbox = ({onLoadExample, onRun}) => {
   const [examples, setExamples] = useState([]);
   const [tags, setTags] = useState([]);
 
   const [example, setExample] = useState('');
   const [tag, setTag] = useState('');
+
+  const [running, setRunning] = useState(false);
 
   useEffect(() => {
     async function load() {
@@ -33,14 +35,21 @@ export const Toolbox = ({onLoadExample, isCompiling, onRun}) => {
     load();
   }, []);
 
+  const runHandle = (shouldSave) => async () => {
+    console.log(tag);
+    setRunning(true);
+    await onRun(tag, shouldSave);
+    setRunning(false);
+  };
+
   return (
     <Container id="toolbox">
         <Container>
             <Dropdown onChange={setTag} value={tag}>
                 {tags.map(e => <Dropdown.Item key={e} value={e}>{e}</Dropdown.Item>)}
             </Dropdown>
-            <Button onClick={onRun(tag, false)} disabled={isCompiling}>Run</Button>
-            <Button onClick={onRun(tag, true)} disabled={isCompiling}>Share</Button>
+            <Button onClick={runHandle(false)} disabled={running}>Run</Button>
+            <Button onClick={runHandle(true)} disabled={running}>Share</Button>
         </Container>
         <Container>
             <Dropdown onChange={setExample} value={example}>
@@ -51,7 +60,7 @@ export const Toolbox = ({onLoadExample, isCompiling, onRun}) => {
             </Button>
         </Container>
         <Container>
-            {isCompiling && <Loader />}
+            {running && <Loader />}
         </Container>
     </Container>
   );
