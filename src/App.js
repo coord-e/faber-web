@@ -8,6 +8,19 @@ import { OutputView } from './OutputView';
 import { Toolbox } from './Toolbox';
 import { endpoint } from './util';
 
+const INITIAL_CODE = `// welcome to faber online compiler
+// click "Load an example" to try out faber with some examples
+// click "Run" to compile and run your code
+
+name id :: forall a. a -> a
+name id x = x
+
+name main :: Int
+name main = id 42
+
+// source code: https://github.com/faber-lang
+`;
+
 async function run (code, tag, shouldSave) {
   const data = {
     code,
@@ -35,15 +48,16 @@ function changeURLToSave (id) {
 }
 
 export const App = () => {
-  const [code, setCode] = useState("init");
-  const [stdout, setStdout] = useState("");
-  const [stderr, setStderr] = useState("");
+  const [code, setCode] = useState(INITIAL_CODE);
+  const [stdout, setStdout] = useState("// standard output will appear here");
+  const [stderr, setStderr] = useState("// standard error will appear here");
   const [tag, setTag] = useState("");
 
   useEffect(() => {
     async function load() {
       const id = window.location.pathname.substr(1);
       if(id) {
+        setCode("// restoring...")
         const resp = await fetch(endpoint(`restore/${id}`));
         const data = await resp.json();
         setStdout(data.result.stdout);
