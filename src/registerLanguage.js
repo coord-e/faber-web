@@ -1,6 +1,22 @@
 export function registerFaber(monaco) {
   monaco.languages.register({ id: 'faber' });
 
+  monaco.languages.setLanguageConfiguration('faber', {
+    comments: {
+      lineComment: '//',
+      blockComment: ['/*', '*/'],
+    },
+    brackets: [
+      ['(', ')']
+    ],
+    autoClosingPairs: [
+      { open: '(', close: ')' },
+    ],
+    surroundingPairs: [
+      { open: '(', close: ')' },
+    ],
+  });
+
   monaco.languages.setMonarchTokensProvider('faber', {
     defaultToken: '',
     keywords: [
