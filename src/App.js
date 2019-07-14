@@ -1,10 +1,11 @@
 import React from 'react';
 
 import 'react-bulma-components/dist/react-bulma-components.min.css';
-import { Button, Columns, Dropdown, Heading, Content, Container, Loader } from 'react-bulma-components';
+import { Button, Columns, Dropdown, Container, Loader } from 'react-bulma-components';
 
 import './App.css';
 import { Editor } from './Editor';
+import { OutputView } from './OutputView';
 
 const ENDPOINT_BASE = "https://api.faber.coord-e.com/";
 
@@ -123,14 +124,7 @@ class App extends React.Component {
                     {this.state.isCompiling && <Loader />}
                 </Container>
             </Container>
-            <Content className="output">
-                <Heading subtitle>stdout</Heading>
-                <pre className="output-box">{this.state.stdout}</pre>
-            </Content>
-            <Content className="output">
-                <Heading subtitle>stderr</Heading>
-                <pre className="output-box">{this.state.stderr}</pre>
-            </Content>
+            <OutputView stdout={this.state.stdout} stderr={this.state.stderr} />
         </Columns.Column>
     </Columns>
     );
