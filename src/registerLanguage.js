@@ -32,16 +32,39 @@ export function registerFaber(monaco) {
       'then',
       'else',
     ],
+    operators: [
+      '=', '==', '+', '-', '*'
+    ],
+    symbols:  /[=><!~?:&|+\-*\/\^%]+/,
+    brackets: [
+      { token: 'delimiter.parenthesis', open: '(', close: ')' },
+	  ],
 	  tokenizer: {
 		  root: [
         { include: '@whitespace' },
 			  { include: '@comment' },
+
+        // capital identifiers are conventionally type names
+        [/[A-Z][\w\$]*/, 'type.identifier' ],
+        // show ctor pattern nicely
+        [/#[\w\$]*/, 'type.identifier' ],
+
         [/[a-zA-Z_]\w*/, {
 				  cases: {
 					  '@keywords': { token: 'keyword.$0' },
 					  '@default': 'identifier'
 				  }
 			  }],
+
+        [/[()]/, '@brackets'],
+
+        [/::/, 'delimiter'],
+        [/^\s*-/, 'delimiter'],
+        [/\|/, 'delimiter'],
+        [/->/, 'delimiter'],
+
+        [/@symbols/, { cases: { '@operators': 'delimiter',
+                                '@default'  : '' } } ],
 			  [/\d+/, 'number'],
 		  ],
       whitespace: [
