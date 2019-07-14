@@ -35,7 +35,7 @@ export function registerFaber(monaco) {
     operators: [
       '=', '==', '+', '-', '*'
     ],
-    symbols:  /[=><!~?:&|+\-*\/\^%]+/,
+    symbols:  /[=><!~?:&|+\-*/^%]+/,
     brackets: [
       { token: 'delimiter.parenthesis', open: '(', close: ')' },
 	  ],
@@ -45,9 +45,9 @@ export function registerFaber(monaco) {
 			  { include: '@comment' },
 
         // capital identifiers are conventionally type names
-        [/[A-Z][\w\$]*/, 'type.identifier' ],
+        [/[A-Z][\w$]*/, 'type.identifier' ],
         // show ctor pattern nicely
-        [/#[\w\$]*/, 'type.identifier' ],
+        [/#[\w$]*/, 'type.identifier' ],
 
         [/[a-zA-Z_]\w*/, {
 				  cases: {
