@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import MobileDetect from 'mobile-detect';
 
 import './index.css';
-import App from './App';
+import { App } from './App';
 import * as serviceWorker from './serviceWorker';
 
 const md = new MobileDetect(window.navigator.userAgent);

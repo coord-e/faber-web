@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 import 'react-bulma-components/dist/react-bulma-components.min.css';
 import { Button, Columns, Dropdown, Container, Loader } from 'react-bulma-components';
@@ -8,80 +8,71 @@ import { OutputView } from './OutputView';
 import { Toolbox } from './Toolbox';
 import { endpoint } from './util';
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    const id = window.location.pathname.substr(1);
+async function run (code, tag, shouldSave) {
+  const data = {
+    code,
+    tag,
+    save: shouldSave,
+  };
 
-    this.state = {
-      code: "// loading an example...\nname main = 0\n",
-      stdout: '// press "Run" to compile',
-      stderr: '',
-    };
-
-    if(id) {
-      this.state.code = "// loading an saved code"
-      fetch(endpoint("restore/"+id))
-        .then(resp => resp.json())
-        .then(data => this.setState({
-          code: data.options.code,
-          tag: data.options.tag,
-          stdout: data.result.stdout,
-          stderr: data.result.stderr,
-        }))
-    }
-  }
-
-  onRun = async (tag, save) => {
-    const data = {
-      code: this.state.code,
-      tag: tag,
-      save,
-    };
-
-    this.setState({
-      stdout: "compiling...",
-      stderr: "compiling...",
+  const resp = await fetch(
+    endpoint("compile"), {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+      },
+      redirect: "follow",
+      body: JSON.stringify(data),
     });
 
-    const resp = await fetch(
-      endpoint("compile"), {
-        method: "POST",
-        mode: "cors",
-        headers: {
-            "Content-Type": "application/json; charset=utf-8",
-        },
-        redirect: "follow",
-        body: JSON.stringify(data),
-    });
-    const content = await resp.json();
-
-    this.setState({
-      stdout: content.stdout,
-      stderr: content.stderr,
-    });
-
-    if(save) {
-      const url = window.location.protocol + "//" + window.location.host + "/" + content.id
-      window.history.pushState('', '', url)
-    }
-  }
-
-  onChangeCode = (code, e) => this.setState({code})
-
-  render() {
-    return (
-      <Columns>
-        <Columns.Column>
-            <Editor code={this.state.code} onChange={this.onChangeCode} />
-        </Columns.Column>
-        <Columns.Column size="one-third">
-            <Toolbox onLoadExample={this.onChangeCode} onRun={this.onRun} />
-            <OutputView stdout={this.state.stdout} stderr={this.state.stderr} />
-        </Columns.Column>
-    </Columns>
-    );
-  }
+  return await resp.json();
 }
 
-export default App;
+function changeURLToSave (id) {
+  const url = `${window.location.protocol}//${window.location.host}/${id}`;
+  window.history.pushstate('', '', url);
+}
+
+export const App = () => {
+  const [code, setCode] = useState("init");
+  const [stdout, setStdout] = useState("");
+  const [stderr, setStderr] = useState("");
+
+  useEffect(() => {
+    async function load() {
+      const id = window.location.pathname.substr(1);
+      if(id) {
+        const resp = await fetch(endpoint(`restore/${id}`));
+        const data = await resp.json();
+        // TODO: use data.options.tag
+        setStdout(data.result.stdout);
+        setStderr(data.result.stderr);
+        setCode(data.options.code);
+      }
+    };
+    load();
+  }, []);
+
+  const onRun = async (tag, shouldSave) => {
+    const {stdout, stderr, id} = await run(code, tag, shouldSave);
+    setStdout(stdout);
+    setStderr(stderr);
+
+    if(shouldSave) {
+      changeURLToSave(id);
+    }
+  };
+
+  return (
+      <Columns>
+        <Columns.Column>
+            <Editor code={code} onChange={setCode} />
+        </Columns.Column>
+        <Columns.Column size="one-third">
+            <Toolbox onLoadExample={setCode} onRun={onRun} />
+            <OutputView stdout={stdout} stderr={stderr} />
+        </Columns.Column>
+      </Columns>
+  );
+};

@@ -37,7 +37,6 @@ export const Toolbox = ({onLoadExample, onRun}) => {
   }, []);
 
   const runHandle = (shouldSave) => async () => {
-    console.log(tag);
     setRunning(true);
     await onRun(tag, shouldSave);
     setRunning(false);
