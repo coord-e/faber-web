@@ -31,7 +31,7 @@ async function run (code, tag, shouldSave) {
 
 function changeURLToSave (id) {
   const url = `${window.location.protocol}//${window.location.host}/${id}`;
-  window.history.pushstate('', '', url);
+  window.history.pushState('', '', url);
 }
 
 export const App = () => {
