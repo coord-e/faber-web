@@ -38,6 +38,7 @@ export const App = () => {
   const [code, setCode] = useState("init");
   const [stdout, setStdout] = useState("");
   const [stderr, setStderr] = useState("");
+  const [tag, setTag] = useState("");
 
   useEffect(() => {
     async function load() {
@@ -45,10 +46,10 @@ export const App = () => {
       if(id) {
         const resp = await fetch(endpoint(`restore/${id}`));
         const data = await resp.json();
-        // TODO: use data.options.tag
         setStdout(data.result.stdout);
         setStderr(data.result.stderr);
         setCode(data.options.code);
+        setTag(data.options.tag);
       }
     };
     load();
@@ -70,7 +71,7 @@ export const App = () => {
             <Editor code={code} onChange={(code, _) => setCode(code)} />
         </Columns.Column>
         <Columns.Column size="one-third">
-            <Toolbox onLoadExample={setCode} onRun={onRun} />
+        <Toolbox initialTag={tag} onLoadExample={setCode} onRun={onRun} />
             <OutputView stdout={stdout} stderr={stderr} />
         </Columns.Column>
       </Columns>

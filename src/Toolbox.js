@@ -14,12 +14,12 @@ async function fetchExample(example) {
   return await resp.text();
 }
 
-export const Toolbox = ({onLoadExample, onRun}) => {
+export const Toolbox = ({onLoadExample, onRun, initialTag}) => {
   const [examples, setExamples] = useState([]);
   const [tags, setTags] = useState([]);
 
   const [example, setExample] = useState('');
-  const [tag, setTag] = useState('');
+  const [tag, setTag] = useState(initialTag);
 
   const [running, setRunning] = useState(false);
 
@@ -27,7 +27,7 @@ export const Toolbox = ({onLoadExample, onRun}) => {
     async function load() {
       const tags = await fetchData("tags");
       setTags(tags);
-      setTag(tags[0]);
+      setTag(t => t || tags[0]);
 
       const examples = await fetchData("examples");
       setExamples(examples);
@@ -35,6 +35,8 @@ export const Toolbox = ({onLoadExample, onRun}) => {
     }
     load();
   }, []);
+
+  useEffect(() => setTag(initialTag), [initialTag]);
 
   const runHandle = (shouldSave) => async () => {
     setRunning(true);
