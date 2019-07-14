@@ -8,6 +8,11 @@ async function fetchData(name) {
   return await resp.json();
 }
 
+async function fetchExample(example) {
+  const resp = await fetch(example)
+  return await resp.text();
+}
+
 export const Toolbox = ({onLoadExample, isCompiling, onRun}) => {
   const [examples, setExamples] = useState([]);
   const [tags, setTags] = useState([]);
@@ -23,7 +28,7 @@ export const Toolbox = ({onLoadExample, isCompiling, onRun}) => {
 
       const examples = await fetchData("examples");
       setExamples(examples);
-      setExample(examples[0]);
+      setExample(examples[0].url);
     }
     load();
   }, []);
@@ -41,7 +46,9 @@ export const Toolbox = ({onLoadExample, isCompiling, onRun}) => {
             <Dropdown onChange={setExample} value={example}>
                 {examples.map(e => <Dropdown.Item key={e.name} value={e.url}>{e.name}</Dropdown.Item>)}
             </Dropdown>
-            <Button onClick={onLoadExample(example)}>Load an example</Button>
+            <Button onClick={async () => onLoadExample(await fetchExample(example))}>
+              Load an example
+            </Button>
         </Container>
         <Container>
             {isCompiling && <Loader />}

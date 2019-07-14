@@ -71,15 +71,6 @@ class App extends React.Component {
     }
   }
 
-  onLoadExample = (example) => async () => {
-    const resp = await fetch(example)
-    const data = await resp.text()
-
-    this.setState({
-        code: data
-    })
-  }
-
   onChangeCode = (code, e) => this.setState({code})
 
   render() {
@@ -89,7 +80,7 @@ class App extends React.Component {
             <Editor code={this.state.code} onChange={this.onChangeCode} />
         </Columns.Column>
         <Columns.Column size="one-third">
-        <Toolbox onLoadExample={this.onLoadExample} isCompiling={this.state.isCompiling} onRun={this.onRun} />
+            <Toolbox onLoadExample={this.onChangeCode} isCompiling={this.state.isCompiling} onRun={this.onRun} />
             <OutputView stdout={this.state.stdout} stderr={this.state.stderr} />
         </Columns.Column>
     </Columns>
