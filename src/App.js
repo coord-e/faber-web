@@ -6,6 +6,7 @@ import { Button, Columns, Dropdown, Container, Loader } from 'react-bulma-compon
 import './App.css';
 import { Editor } from './Editor';
 import { OutputView } from './OutputView';
+import { Toolbox } from './Toolbox';
 
 const ENDPOINT_BASE = "https://api.faber.coord-e.com/";
 
@@ -19,9 +20,7 @@ class App extends React.Component {
     this.state = {
       code: "// loading an example...\nname main = 0\n",
       tags: [],
-      tag: '',
       examples: [],
-      example: '',
       stdout: '// press "Run" to compile',
       stderr: '',
       isCompiling: false,
@@ -49,10 +48,10 @@ class App extends React.Component {
     }
   }
 
-  onRun = save => async () => {
+  onRun = (tag, save) => async () => {
     const data = {
       code: this.state.code,
-      tag: this.state.tag,
+      tag: tag,
       save,
     };
 
@@ -86,8 +85,8 @@ class App extends React.Component {
     }
   }
 
-  onLoadExample = async () => {
-    const resp = await fetch(this.state.example)
+  onLoadExample = (example) => async () => {
+    const resp = await fetch(example)
     const data = await resp.text()
 
     this.setState({
@@ -106,24 +105,7 @@ class App extends React.Component {
             <Editor code={this.state.code} onChange={this.onChangeCode} />
         </Columns.Column>
         <Columns.Column size="one-third">
-            <Container id="toolbox">
-                <Container>
-                    <Dropdown onChange={this.onChangeTag} value={this.state.tag}>
-                        {this.state.tags.map(e => <Dropdown.Item key={e} value={e}>{e}</Dropdown.Item>)}
-                    </Dropdown>
-                    <Button onClick={this.onRun(false)} disabled={this.state.isCompiling}>Run</Button>
-                    <Button onClick={this.onRun(true)} disabled={this.state.isCompiling}>Share</Button>
-                </Container>
-                <Container>
-                    <Dropdown onChange={this.onChangeExample} value={this.state.example}>
-                        {this.state.examples.map(e => <Dropdown.Item key={e.name} value={e.url}>{e.name}</Dropdown.Item>)}
-                    </Dropdown>
-                    <Button onClick={this.onLoadExample}>Load an example</Button>
-                </Container>
-                <Container>
-                    {this.state.isCompiling && <Loader />}
-                </Container>
-            </Container>
+        <Toolbox tags={this.state.tags} examples={this.state.examples} onLoadExample={this.onLoadExample} isCompiling={this.state.isCompiling} onRun={this.onRun} />
             <OutputView stdout={this.state.stdout} stderr={this.state.stderr} />
         </Columns.Column>
     </Columns>
