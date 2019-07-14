@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
 import { Button, Dropdown, Container, Loader } from 'react-bulma-components';
 
-import './Toolbox.css';
 import { endpoint } from './util';
+
+const ToolboxContainer = styled(Container)`
+  height: 10vh;
+`;
 
 async function fetchData(name) {
   const resp = await fetch(endpoint(name));
@@ -45,7 +49,7 @@ export const Toolbox = ({onLoadExample, onRun, initialTag}) => {
   };
 
   return (
-    <Container id="toolbox">
+    <ToolboxContainer>
         <Container>
             <Dropdown onChange={setTag} value={tag}>
                 {tags.map(e => <Dropdown.Item key={e} value={e}>{e}</Dropdown.Item>)}
@@ -64,6 +68,6 @@ export const Toolbox = ({onLoadExample, onRun, initialTag}) => {
         <Container>
             {running && <Loader />}
         </Container>
-    </Container>
+    </ToolboxContainer>
   );
 }

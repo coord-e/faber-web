@@ -344,6 +344,7 @@ module.exports = function(webpackEnv) {
                 ),
                 
                 plugins: [
+                  'babel-plugin-styled-components',
                   [
                     require.resolve('babel-plugin-named-asset-import'),
                     {
@@ -476,7 +477,10 @@ module.exports = function(webpackEnv) {
       ],
     },
     plugins: [
-      new MonacoWebpackPlugin(),
+      new MonacoWebpackPlugin({
+        languages: [],
+        features: ['bracketMatching', 'caretOperations', 'clipboard', 'comment', 'contextmenu', 'coreCommands', 'cursorUndo', 'dnd', 'find', 'folding', 'gotoLine', 'inPlaceReplace', 'inspectTokens', 'iPadShowKeyboard', 'linesOperations', 'links', 'multicursor', 'smartSelect', 'wordHighlighter', 'wordOperations', 'wordPartOperations'],
+      }),
       // Generates an `index.html` file with the <script> injected.
       new HtmlWebpackPlugin(
         Object.assign(
