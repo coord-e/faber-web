@@ -1,18 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Dropdown, Container, Loader } from 'react-bulma-components';
 
-export const Toolbox = ({tags, examples, onLoadExample, isCompiling, onRun}) => {
+import { endpoint } from './util';
+
+async function fetchData(name) {
+  const resp = await fetch(endpoint(name));
+  return await resp.json();
+}
+
+export const Toolbox = ({onLoadExample, isCompiling, onRun}) => {
+  const [examples, setExamples] = useState([]);
+  const [tags, setTags] = useState([]);
+
   const [example, setExample] = useState('');
   const [tag, setTag] = useState('');
 
   useEffect(() => {
-    if(examples.length !== 0) {
-      const e = examples[0].url;
-      setExample(e);
-      onLoadExample(e)();
+    async function load() {
+      const tags = await fetchData("tags");
+      setTags(tags);
+      setTag(tags[0]);
+
+      const examples = await fetchData("examples");
+      setExamples(examples);
+      setExample(examples[0]);
     }
-    setTag(tags[0]);
-  }, [onLoadExample, tags, examples]);
+    load();
+  }, []);
 
   return (
     <Container id="toolbox">

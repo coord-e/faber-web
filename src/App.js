@@ -7,10 +7,7 @@ import './App.css';
 import { Editor } from './Editor';
 import { OutputView } from './OutputView';
 import { Toolbox } from './Toolbox';
-
-const ENDPOINT_BASE = "https://api.faber.coord-e.com/";
-
-const endpoint = (name) => ENDPOINT_BASE + name;
+import { endpoint } from './util';
 
 class App extends React.Component {
   constructor(props) {
@@ -19,20 +16,10 @@ class App extends React.Component {
 
     this.state = {
       code: "// loading an example...\nname main = 0\n",
-      tags: [],
-      examples: [],
       stdout: '// press "Run" to compile',
       stderr: '',
       isCompiling: false,
     };
-
-    fetch(endpoint("tags"))
-      .then(resp => resp.json())
-      .then(data => this.setState({tags: data}));
-
-    fetch(endpoint("examples"))
-      .then(resp => resp.json())
-      .then(data => this.setState({examples: data}));
 
     if(id) {
       this.state.code = "// loading an saved code"
@@ -102,7 +89,7 @@ class App extends React.Component {
             <Editor code={this.state.code} onChange={this.onChangeCode} />
         </Columns.Column>
         <Columns.Column size="one-third">
-        <Toolbox tags={this.state.tags} examples={this.state.examples} onLoadExample={this.onLoadExample} isCompiling={this.state.isCompiling} onRun={this.onRun} />
+        <Toolbox onLoadExample={this.onLoadExample} isCompiling={this.state.isCompiling} onRun={this.onRun} />
             <OutputView stdout={this.state.stdout} stderr={this.state.stderr} />
         </Columns.Column>
     </Columns>
