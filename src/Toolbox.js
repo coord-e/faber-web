@@ -6,9 +6,13 @@ export const Toolbox = ({tags, examples, onLoadExample, isCompiling, onRun}) => 
   const [tag, setTag] = useState('');
 
   useEffect(() => {
-    setExample(examples[0] && examples[0].url);
+    if(examples.length !== 0) {
+      const e = examples[0].url;
+      setExample(e);
+      onLoadExample(e)();
+    }
     setTag(tags[0]);
-  }, [tags, examples]);
+  }, [onLoadExample, tags, examples]);
 
   return (
     <Container id="toolbox">

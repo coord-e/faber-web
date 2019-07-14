@@ -28,12 +28,11 @@ class App extends React.Component {
 
     fetch(endpoint("tags"))
       .then(resp => resp.json())
-      .then(data => this.setState({tags: data, tag: data[0]}));
+      .then(data => this.setState({tags: data}));
 
     fetch(endpoint("examples"))
       .then(resp => resp.json())
-      .then(data => this.setState({examples: data, example: data[0].url}))
-      .then(id ? null : this.onLoadExample)
+      .then(data => this.setState({examples: data}));
 
     if(id) {
       this.state.code = "// loading an saved code"
@@ -95,8 +94,6 @@ class App extends React.Component {
   }
 
   onChangeCode = (code, e) => this.setState({code})
-  onChangeTag = (tag) => this.setState({tag})
-  onChangeExample = (example) => this.setState({example})
 
   render() {
     return (
