@@ -3,7 +3,6 @@ import React from 'react';
 import 'react-bulma-components/dist/react-bulma-components.min.css';
 import { Button, Columns, Dropdown, Container, Loader } from 'react-bulma-components';
 
-import './App.css';
 import { Editor } from './Editor';
 import { OutputView } from './OutputView';
 import { Toolbox } from './Toolbox';

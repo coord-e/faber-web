@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Dropdown, Container, Loader } from 'react-bulma-components';
 
+import './Toolbox.css';
 import { endpoint } from './util';
 
 async function fetchData(name) {
