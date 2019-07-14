@@ -1,10 +1,10 @@
 import React from 'react';
-import MonacoEditor from 'react-monaco-editor';
 
 import 'react-bulma-components/dist/react-bulma-components.min.css';
 import { Button, Columns, Dropdown, Heading, Content, Container, Loader } from 'react-bulma-components';
 
 import './App.css';
+import { Editor } from './Editor';
 
 const ENDPOINT_BASE = "https://api.faber.coord-e.com/";
 
@@ -48,17 +48,9 @@ class App extends React.Component {
     }
   }
 
-  editorDidMount = (editor, monaco) => {
-    editor.focus();
-  }
-
   onRun = save => async () => {
-    const model = this.refs.monaco.editor.getModel();
-    const value = model.getValue();
-
-
     const data = {
-      code: value,
+      code: this.state.code,
       tag: this.state.tag,
       save,
     };
@@ -110,17 +102,7 @@ class App extends React.Component {
     return (
       <Columns>
         <Columns.Column>
-            <MonacoEditor
-                width="98%"
-                height="100vh"
-                theme="vs-dark"
-                language="none"
-                value={this.state.code}
-                options={{}}
-                editorDidMount={this.editorDidMount}
-                onChange={this.onChangeCode}
-                ref="monaco"
-            />
+            <Editor code={this.state.code} onChange={this.onChangeCode} />
         </Columns.Column>
         <Columns.Column size="one-third">
             <Container id="toolbox">
