@@ -1,10 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import MobileDetect from 'mobile-detect';
+
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+const md = new MobileDetect(window.navigator.userAgent);
+
+const Root = () => (
+  md.mobile()
+  ? "mobile browser is not supported; please visit from desktop"
+  : <App />
+)
+
+ReactDOM.render(<Root />, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
