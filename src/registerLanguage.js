@@ -58,10 +58,12 @@ export function registerFaber(monaco) {
 
         [/[()]/, '@brackets'],
 
-        [/::/, 'delimiter'],
+        [/::/, 'annotation'],
         [/^\s*-/, 'delimiter'],
-        [/\|/, 'delimiter'],
-        [/->/, 'delimiter'],
+        [/[,|]/, 'delimiter'],
+
+        [/->/, 'keyword'],
+        [/=>/, 'keyword'],
 
         [/@symbols/, { cases: { '@operators': 'delimiter',
                                 '@default'  : '' } } ],
