@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import 'react-bulma-components/dist/react-bulma-components.min.css';
-import { Button, Columns, Dropdown, Container, Loader } from 'react-bulma-components';
+import { Columns } from 'react-bulma-components';
 
 import { Editor } from './Editor';
 import { OutputView } from './OutputView';
